@@ -17,12 +17,12 @@ void signalHandler(int signum)
 int main(int argc, char **argv)
 {
     const double dt = 0.001; 
-    const double dt_100 = 0.1; // Time domain with 100ms clock
+   // const double dt_100 = 0.1; // Time domain with 100ms clock
 
     eeros::logger::Logger::setDefaultStreamLogger(std::cout);
     eeros::logger::Logger log = eeros::logger::Logger::getLogger();
 
-    log.info() << "Starting template project...";
+    log.info() << "Starting strat3 project...";
 
     log.info() << "Initializing hardware...";
     eeros::hal::HAL& hal = eeros::hal::HAL::instance();
@@ -36,7 +36,9 @@ int main(int argc, char **argv)
     MyRobotSafetyProperties sp(cs, dt);
     eeros::safety::SafetySystem ss(sp, dt);
     cs.timedomain.registerSafetyEvent(ss, sp.doSystemOff); // fired if timedomain fails to run properly
-    signal(SIGINT, signalHandler);
+    cs.signalChecker.registerSafetyEvent(ss, sp.doEmergency); // If a signalChecker triggers, it will do the event doEmergency.
+    cs.signalChecker.setActiveLevel(sp.slSystemOn); // Only check for signal at Level SystemOn and higher
+    signal(SIGINT, signalHandler); // Catches signal from keyboard to properly shutdown the program
 
     log.info() << "Initializing sequencer...";
     auto &sequencer = eeros::sequencer::Sequencer::instance();

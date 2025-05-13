@@ -61,6 +61,7 @@ MyRobotSafetyProperties::MyRobotSafetyProperties(ControlSystem &cs, double dt)
 
     // Add events to multiple safety levels
     addEventToAllLevelsBetween(slSystemOn, slSystemMoving, doEmergency, slSystemEmergency, kPublicEvent);
+    addEventToLevelAndAbove(slSystemTurningOn, doSystemOff, slSystemOff, kPublicEvent);
 
     // Define input actions for all levels
     slSystemOff.setInputActions({ignore(button_p), ignore(button_m)});
@@ -82,7 +83,7 @@ MyRobotSafetyProperties::MyRobotSafetyProperties(ControlSystem &cs, double dt)
     
 
     // Define and add level actions
-    slSystemOff.setLevelAction([&](SafetyContext *privateContext) {
+    slSystemOff.setLevelAction([&](SafetyContext *privateContext) { //TODO: Move this to "turningOff" state
         cs.timedomain.stop();
         eeros::Executor::stop();
     });
@@ -96,6 +97,7 @@ MyRobotSafetyProperties::MyRobotSafetyProperties(ControlSystem &cs, double dt)
 
 
     slSystemOn.setLevelAction([&](SafetyContext *privateContext) {
+        cs.signalChecker.reset(); //Reset signal checker so it can trigger again
         cs.timedomain.start();
     });
 

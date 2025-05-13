@@ -5,6 +5,11 @@
 #include <eeros/core/Executor.hpp>
 #include <eeros/control/Constant.hpp>
 #include <eeros/control/Gain.hpp>
+#include <eeros/control/PeripheralInput.hpp>
+#include <eeros/control/PeripheralOutput.hpp>
+#include <eeros/control/SignalChecker.hpp>
+#include "customBlocks/customController.hpp"
+
 
 using namespace eeros::control;
 
@@ -14,8 +19,15 @@ public:
     ControlSystem(double dt);
 
     // Define Blocks
-    Constant<> myConstant;
-    Gain<> myGain;
+    Gain<> gain;
+    PeripheralInput<> q1;
+    SignalChecker<> signalChecker;
+
+    Constant<> motorVoltageSetpoint;
+    //PeripheralInput<> encoder;
+    PeripheralOutput<> motor;
+    customController<> controller;
+
     
 
     TimeDomain timedomain;

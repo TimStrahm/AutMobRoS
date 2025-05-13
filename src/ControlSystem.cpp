@@ -1,23 +1,34 @@
 #include "ControlSystem.hpp"
 
 ControlSystem::ControlSystem(double dt)
-    : myConstant(1.0), myGain(2.0),
+    : q1("quat1"),
+      gain(2.0),
+      signalChecker(-0.2, 0.2), // Checks if a signal is in this range (triggers event if outside)
+      motorVoltageSetpoint(0.0),
+      motor("motor1"),
       timedomain("Main time domain", dt, true)
+
 {
     // Name all blocks
-    myConstant.setName("My constant");
-    myGain.setName("My gain");
+    gain.setName("Gain");
+    q1.setName("Q1");
+    signalChecker.setName("SignalChecker");
 
     // Name all signals
-    //myConstant.getOut().getSignal().setName("My constant value");
-    //myGain.getOut().getSignal().setName("My constant value multiplied with my gain");
+    q1.getOut().getSignal().setName("alpha/2");
+    gain.getOut().getSignal().setName("alpha");
 
     // Connect signals
-    myGain.getIn().connect(myConstant.getOut());
+    gain.getIn().connect(q1.getOut());
+    signalChecker.getIn().connect(gain.getOut());
+    motor.getIn().connect(motorVoltageSetpoint.getOut());
 
     // Add blocks to timedomain
-    timedomain.addBlock(myConstant);
-    timedomain.addBlock(myGain);
+    timedomain.addBlock(q1);
+    timedomain.addBlock(gain);
+    timedomain.addBlock(signalChecker);
+    timedomain.addBlock(motorVoltageSetpoint);
+    timedomain.addBlock(motor);
 
     // Add timedomain to executor
     eeros::Executor::instance().add(timedomain);

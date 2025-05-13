@@ -24,7 +24,7 @@ public:
 
     
 
-    // Defina all possible levels
+    // Defina all possible levels§
     eeros::safety::SafetyLevel slSystemOff;
     eeros::safety::SafetyLevel slSystemTurningOn;
     eeros::safety::SafetyLevel slSystemTurningOff;
