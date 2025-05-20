@@ -38,7 +38,6 @@ private:
     eeros::hal::Output<bool>* LED_g;
     eeros::hal::Output<bool>* LED_r;
 
-
     // Define all critical inputs
     eeros::hal::Input<bool>* button_p; // pause button
     eeros::hal::Input<bool>* button_m; // Mode button

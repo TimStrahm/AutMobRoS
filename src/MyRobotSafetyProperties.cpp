@@ -21,7 +21,6 @@ MyRobotSafetyProperties::MyRobotSafetyProperties(ControlSystem &cs, double dt)
       doPowerOff("Power down the motors"),
       doStartMoving("Start movement"),
       doStopMoving("Halt movement")
-      
 {
     eeros::hal::HAL &hal = eeros::hal::HAL::instance();
 
@@ -95,6 +94,9 @@ MyRobotSafetyProperties::MyRobotSafetyProperties(ControlSystem &cs, double dt)
             }
     });
 
+    slSystemEmergency.setLevelAction([&](SafetyContext *privateContext) { 
+        cs.motorVoltageSetpoint.setValue(0.0); // In case of emergency state, set the motor to 0 Volt
+    });
 
     slSystemOn.setLevelAction([&](SafetyContext *privateContext) {
         cs.signalChecker.reset(); //Reset signal checker so it can trigger again
