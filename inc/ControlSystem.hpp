@@ -24,7 +24,7 @@ public:
     SignalChecker<> signalChecker;
 
     Constant<> motorVoltageSetpoint;
-    //PeripheralInput<> encoder;
+    PeripheralInput<> E2;
     PeripheralOutput<> motor;
     customController<> controller;
 

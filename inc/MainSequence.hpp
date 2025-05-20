@@ -23,14 +23,14 @@ public:
           sp(sp),
           cs(cs),
 
-          sleep("Sleep", this),
-          setMotorVoltage("setMotorVoltage", this, cs),
-          checkOrientation(0.1, cs),
-          orientationException("Orientation Exception", this, cs, checkOrientation),
-          orientationMonitor("Orientation monitor", this, checkOrientation, eeros::sequencer::SequenceProp::resume, &orientationException)
+          sleep("Sleep", this)
+         // setMotorVoltage("setMotorVoltage", this, cs),
+         // checkOrientation(0.1, cs),
+         // orientationException("Orientation Exception", this, cs, checkOrientation),
+         // orientationMonitor("Orientation monitor", this, checkOrientation, eeros::sequencer::SequenceProp::resume, &orientationException)
           
     {
-        addMonitor(&orientationMonitor);
+        //addMonitor(&orientationMonitor);
         log.info() << "Sequence created: " << name;
     }
 
@@ -38,14 +38,18 @@ public:
     {
         while (eeros::sequencer::Sequencer::running) // Contains all the steps to be done sequentially (like Tasklist)
         {
+            sleep(1.0);
+            //log.info() << "Angle of Wheel is at" << cs.E2.getOut().getSignal() << " rad.";
+                log.info() << cs.E2.getOut().getSignal();
 
-            setMotorVoltage(-1.5);
-            sleep(3.0);
-            setMotorVoltage(1.5);
-            sleep(3.0);
+            // Motor sweep
+            // setMotorVoltage(-1.5);
+            // sleep(3.0);
+            // setMotorVoltage(1.5);
+            // sleep(3.0);
 
             // sleep(1.0);
-            log.info() << "Sweep completed...";
+            // log.info() << "Sweep completed...";
         }
         return 0;
     }
@@ -56,10 +60,10 @@ private:
     MyRobotSafetyProperties &sp;
 
     eeros::sequencer::Wait sleep;
-    SetMotorVoltage setMotorVoltage;
-    CheckOrientation checkOrientation;
-    OrientationException orientationException;
-    eeros::sequencer::Monitor orientationMonitor;
+    // SetMotorVoltage setMotorVoltage;
+    // CheckOrientation checkOrientation;
+    // OrientationException orientationException;
+    // eeros::sequencer::Monitor orientationMonitor;
 };
 
 #endif // MAINSEQUENCE_HPP_
