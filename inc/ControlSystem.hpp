@@ -5,6 +5,7 @@
 #include <eeros/core/Executor.hpp>
 #include <eeros/control/Constant.hpp>
 #include <eeros/control/Gain.hpp>
+#include <eeros/control/Saturation.hpp>
 #include <eeros/control/PeripheralInput.hpp>
 #include <eeros/control/PeripheralOutput.hpp>
 #include <eeros/control/SignalChecker.hpp>
@@ -28,7 +29,10 @@ public:
     PeripheralOutput<> motor;
     customController<> controller;
 
-    
+    Gain<> cont;
+    Saturation<> qdMax;
+    Gain<> i;
+    Gain<> kM;    
 
     TimeDomain timedomain;
 };
