@@ -11,7 +11,6 @@
 #include <eeros/control/SignalChecker.hpp>
 #include "customBlocks/customController.hpp"
 
-
 using namespace eeros::control;
 
 class ControlSystem
@@ -30,9 +29,13 @@ public:
     customController<> controller;
 
     Gain<> cont;
-    Saturation<> qdMax;
-    Gain<> i;
-    Gain<> kM;    
+    // Saturation<> qdMax;
+    Saturation<> QMax;
+    Gain<> iInv;
+    Gain<> kMInv;
+    Gain<> R;
+    // Gain<> i;
+    // Gain<> kM;
 
     TimeDomain timedomain;
 };

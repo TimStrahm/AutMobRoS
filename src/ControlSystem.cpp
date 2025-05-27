@@ -7,36 +7,37 @@ ControlSystem::ControlSystem(double dt) // names such as "quat1", "motor1" must 
       motorVoltageSetpoint(0.0),
       motor("motor1"),
       E2("enc2"),
-      cont(21.2/2.0/M_PI),
-      qdMax(21.2),
-      i(3441.0/104.0),
-      kM(8.44e-3),
+      cont(0.03 / 2.0 / M_PI),
+      QMax(0.1),
+      iInv(104.0 / 3441.0),
+      kMInv(1 / 8.44e-3),
+      R(8.0),
       timedomain("Main time domain", dt, true)
 
 {
     // Name all blocks
-    gain.setName("Gain");
+    // gain.setName("Gain");
     q1.setName("Q1");
-    signalChecker.setName("SignalChecker");
-    motorVoltageSetpoint.setName("motorVoltageSetpont");
-    motor.setName("motor");
+    // signalChecker.setName("SignalChecker");
+    // motorVoltageSetpoint.setName("motorVoltageSetpont");
     E2.setName("E2");
     cont.setName("cont");
-    qdMax.setName("qdMax");
-    i.setName("i");
-    kM.setName("kM");
-
-
+    QMax.setName("QMax");
+    iInv.setName("i");
+    kMInv.setName("kM");
+    R.setName("R");
+    motor.setName("motor");
 
     // Name all signals
     q1.getOut().getSignal().setName("alpha/2");
-    gain.getOut().getSignal().setName("alpha");
-    motorVoltageSetpoint.getOut().getSignal().setName("Motor Voltage Setpoint");
+   // gain.getOut().getSignal().setName("alpha");
+   // motorVoltageSetpoint.getOut().getSignal().setName("Motor Voltage Setpoint");
     E2.getOut().getSignal().setName("q2[rad]");
     cont.getOut().getSignal().setName("qd1[rad/s]");
-    qdMax.getOut().getSignal().setName("qd1[rad/s]");
-    i.getOut().getSignal().setName("om1[rad/s]");
-    kM.getOut().getSignal().setName("U[V]");
+
+    // qdMax.getOut().getSignal().setName("qd1[rad/s]");
+    // i.getOut().getSignal().setName("om1[rad/s]");
+    // kM.getOut().getSignal().setName("U[V]");
 
     // Connect signals
     // gain.getIn().connect(q1.getOut());
@@ -46,23 +47,28 @@ ControlSystem::ControlSystem(double dt) // names such as "quat1", "motor1" must 
     // DC Motor Lab
 
     cont.getIn().connect(E2.getOut());
-    qdMax.getIn().connect(cont.getOut());
-    i.getIn().connect(qdMax.getOut());
-    kM.getIn().connect(i.getOut());
-    motor.getIn().connect(kM.getOut());
+    QMax.getIn().connect(cont.getOut());
+    iInv.getIn().connect(QMax.getOut());
+    kMInv.getIn().connect(iInv.getOut());
+    R.getIn().connect(kMInv.getOut());
+    motor.getIn().connect(R.getOut());
 
-    // Add blocks to timedomain
+    // Add blocks to timedomain (order is critical!)
     timedomain.addBlock(q1);
     // timedomain.addBlock(gain);
-    //timedomain.addBlock(signalChecker);
-    //timedomain.addBlock(motorVoltageSetpoint);
+    // timedomain.addBlock(signalChecker);
+    // timedomain.addBlock(motorVoltageSetpoint);
     timedomain.addBlock(E2);
     timedomain.addBlock(cont);
-    timedomain.addBlock(qdMax);
-    timedomain.addBlock(i);
-    timedomain.addBlock(kM);
-    timedomain.addBlock(motor);
+    timedomain.addBlock(QMax);
+    timedomain.addBlock(iInv);
+    timedomain.addBlock(kMInv);
+    timedomain.addBlock(R);
 
+    // timedomain.addBlock(qdMax);
+    // timedomain.addBlock(i);
+    // timedomain.addBlock(kM);
+    timedomain.addBlock(motor);
 
     // Add timedomain to executor
     eeros::Executor::instance().add(timedomain);

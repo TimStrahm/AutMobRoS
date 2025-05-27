@@ -41,7 +41,7 @@ public:
             sleep(1.0);
             //log.info() << "Angle of Wheel is at" << cs.E2.getOut().getSignal() << " rad.";
                 // log.info() << cs.E2.getOut().getSignal();
-                log.info() << cs.qdMax.getOut().getSignal();
+                log.info() << cs.QMax.getOut().getSignal();
             // Motor sweep
             // setMotorVoltage(-1.5);
             // sleep(3.0);
